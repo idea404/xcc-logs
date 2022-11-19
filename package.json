@@ -1,0 +1,54 @@
+{
+  "name": "near-trust-index",
+  "version": "0.1.0",
+  "description": "Reputation service for NEAR Accounts",
+  "main": "index.ts",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "near-sdk-js build src/contract.ts build/index.wasm",
+    "test": "npm run test:build && npm run test:run",
+      "test:run": "ava",
+      "test:build": "near-sdk-js build test/contracts/test.ts build/test.wasm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idea404/near-trust-index.git"
+  },
+  "keywords": [
+    "near;",
+    "nearprotocol;",
+    "smartcontract"
+  ],
+  "author": "idea404; sandoche",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/idea404/near-trust-index/issues"
+  },
+  "homepage": "https://github.com/idea404/near-trust-index#readme",
+  "dependencies": {
+    "decimal.js": "^10.4.2",
+    "near-sdk-js": "0.6.0-0"
+  },
+  "devDependencies": {
+    "ava": "^4.3.3",
+    "near-workspaces": "^3.2.2",
+    "typescript": "^4.7.4"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.ava.js"
+    ],
+    "require": [],
+    "failFast": false,
+    "timeout": "2m",
+    "failWithoutAssertions": true,
+    "environmentVariables": {
+      "MY_ENVIRONMENT_VARIABLE": "EXAMPLE1"
+    },
+    "verbose": true,
+    "nodeArguments": []
+  }
+}
