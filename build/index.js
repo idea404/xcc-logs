@@ -6121,11 +6121,11 @@ var Decimal = P.constructor = clone(DEFAULTS);
 LN10 = new Decimal(LN10);
 PI = new Decimal(PI);
 
-var _dec, _dec2, _dec3, _dec4, _class, _class2;
+var _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2;
 const WHITELISTED_ACCOUNTS = ["asac.test.near", "nearnautnft.test.near"];
-let NearTrustIndex = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({
+let NearTrustIndex = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = view(), _dec4 = call({
   payableFunction: true
-}), _dec4 = call({
+}), _dec5 = call({
   privateFunction: true
 }), _dec(_class = (_class2 = class NearTrustIndex {
   constructor() {
@@ -6138,6 +6138,22 @@ let NearTrustIndex = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({
   get_temp_logs() {
     return this.testLogs;
   }
+  get_index_from_history({
+    account_id
+  }) {
+    if (WHITELISTED_ACCOUNTS.includes(account_id)) {
+      return {
+        account_id: account_id,
+        index: new Decimal(1.0).toFixed(2),
+        timestamp: blockTimestamp().toString()
+      };
+    }
+    return {
+      account_id: account_id,
+      index: this.accountIndexHistory.get(account_id),
+      timestamp: this.accountIndexHistoryTimestamp.get(account_id)
+    };
+  }
   calculate_index({
     account_id
   }) {
@@ -6147,7 +6163,7 @@ let NearTrustIndex = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({
     // ----
     const thirtyTgas = BigInt("30" + "0".repeat(12));
     let callCount = 0;
-    let thisContract = Object.keys(WHITELISTED_ACCOUNTS)[0];
+    let thisContract = WHITELISTED_ACCOUNTS[0];
     log$1("thisContract: " + thisContract);
     this.testLogs.push("thisContract: " + thisContract);
     const promise = NearPromise.new(thisContract);
@@ -6241,7 +6257,7 @@ let NearTrustIndex = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({
     this.accountIndexHistory.set(accountId, accountIndex);
     this.accountIndexHistoryTimestamp.set(accountId, timestamp);
   }
-}, (_applyDecoratedDescriptor(_class2.prototype, "get_temp_logs", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "get_temp_logs"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "calculate_index", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "calculate_index"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "internalCallback", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "internalCallback"), _class2.prototype)), _class2)) || _class);
+}, (_applyDecoratedDescriptor(_class2.prototype, "get_temp_logs", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "get_temp_logs"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_index_from_history", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "get_index_from_history"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "calculate_index", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "calculate_index"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "internalCallback", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "internalCallback"), _class2.prototype)), _class2)) || _class);
 function internalCallback() {
   const _state = NearTrustIndex._getState();
   if (!_state && NearTrustIndex._requireInit()) {
@@ -6270,6 +6286,19 @@ function calculate_index() {
   NearTrustIndex._saveToStorage(_contract);
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(NearTrustIndex._serialize(_result, true));
 }
+function get_index_from_history() {
+  const _state = NearTrustIndex._getState();
+  if (!_state && NearTrustIndex._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = NearTrustIndex._create();
+  if (_state) {
+    NearTrustIndex._reconstruct(_contract, _state);
+  }
+  const _args = NearTrustIndex._getArgs();
+  const _result = _contract.get_index_from_history(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(NearTrustIndex._serialize(_result, true));
+}
 function get_temp_logs() {
   const _state = NearTrustIndex._getState();
   if (!_state && NearTrustIndex._requireInit()) {
@@ -6284,5 +6313,5 @@ function get_temp_logs() {
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(NearTrustIndex._serialize(_result, true));
 }
 
-export { calculate_index, get_temp_logs, internalCallback };
+export { calculate_index, get_index_from_history, get_temp_logs, internalCallback };
 //# sourceMappingURL=index.js.map

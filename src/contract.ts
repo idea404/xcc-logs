@@ -24,6 +24,14 @@ class NearTrustIndex {
     return this.testLogs;
   }
 
+  @view({})
+  get_index_from_history({ account_id }: { account_id: string }): { account_id: string; index: string | null; timestamp: string | null } {
+    if (WHITELISTED_ACCOUNTS.includes(account_id)) {
+      return { account_id: account_id, index: new Decimal(1.0).toFixed(2), timestamp: near.blockTimestamp().toString() };
+    }
+    return { account_id: account_id, index: this.accountIndexHistory.get(account_id), timestamp: this.accountIndexHistoryTimestamp.get(account_id) };
+  }
+
   @call({ payableFunction: true })
   calculate_index({ account_id }: { account_id: string }): NearPromise | void {
     near.log("calculate_index");
@@ -32,7 +40,7 @@ class NearTrustIndex {
     // ----
     const thirtyTgas = BigInt("30" + "0".repeat(12));
     let callCount = 0;
-    let thisContract = Object.keys(WHITELISTED_ACCOUNTS)[0];
+    let thisContract = WHITELISTED_ACCOUNTS[0];
     near.log("thisContract: " + thisContract);
     this.testLogs.push("thisContract: " + thisContract);
     const promise = NearPromise.new(thisContract);
